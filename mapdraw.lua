@@ -76,7 +76,7 @@ function love.load()
 	-- the ground for the level
 	objects.ground = {}
 	objects.ground.body = love.physics.newBody(world, world_w/2, world_h, 0, 0)
-	objects.ground.shape = love.physics.newRectangleShape(objects.ground.body, 0, 0, world_w, 200, 0)
+	objects.ground.shape = love.physics.newRectangleShape(objects.ground.body, 0, 0, world_w, 20, 0)
 	
 	objects.player = {}
 	objects.player.body = love.physics.newBody(world, 100, 100, 15, 0)
@@ -175,7 +175,7 @@ end
 
 function love.keypressed(key, unicode)
 	if key == "up" then
-		objects.player.body:applyImpulse(0, 2000)
+		objects.player.body:applyImpulse(0, -100)
 	end
 end
 
