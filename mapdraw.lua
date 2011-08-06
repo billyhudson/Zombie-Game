@@ -1,5 +1,7 @@
 function love.load()
-	scrollSpeed = 4
+	runSpeed = 250
+	walkSpeed = 75
+	edgeBuffer = 2 -- tiles
 	
 	map_x = 0
 	map_y = 0
@@ -54,16 +56,18 @@ function love.load()
     map_y = 0
     map_display_buffer = 2 -- We have to buffer one tile before and behind our viewpoint.
                                -- Otherwise, the tiles will just pop into view, and we don't want that.
+	screen_w = love.graphics.getWidth()
+	screen_h = love.graphics.getHeight()
 	tile_w = 64
     tile_h = 64
-    map_display_w = love.graphics.getWidth() / tile_w
-    map_display_h = love.graphics.getHeight() / tile_h
+    map_display_w = screen_w / tile_w
+    map_display_h =  screen_h / tile_h
 	
 	--physics world
 	world_w = map_w * tile_w
 	world_h = map_h * tile_h
 	world = love.physics.newWorld(0, 0, world_w, world_h)
-	world:setGravity(0, 0)
+	world:setGravity(0, 300)
 	world:setMeter(64) --the height of a meter in this world will be 64px
 	
 	-- world objects
@@ -71,7 +75,15 @@ function love.load()
 	-- the ground for the level
 	objects.ground = {}
 	objects.ground.body = love.physics.newBody(world, world_w/2, world_h, 0, 0)
-	objects.ground.shape = love.physics.newRectangleShape(objects.ground.body, 0, 0, world_w, 100, 0)
+	objects.ground.shape = love.physics.newRectangleShape(objects.ground.body, 0, 0, world_w, 200, 0)
+	
+	objects.player = {}
+	objects.player.body = love.physics.newBody(world, 100, 100, 15, 0)
+	objects.player.shape = love.physics.newRectangleShape(objects.player.body, 0, 0, 30, 60, 0)
+	objects.player.texture = love.graphics.newImage("images/player.png")
+	objects.player.quad = {}
+	objects.player.quad.idle = love.graphics.newQuad(0, 0, 32, 64, 32, 64)
+	
 	
 	 --initial graphics setup
 	love.graphics.setBackgroundColor(104, 136, 248) --set the background color to a nice blue
@@ -103,23 +115,42 @@ end
 
 function love.update( dt )
 	world:update(dt) --this puts the world into motion
-
+	
     -- get input, eventually the map will be pushed by the player as he approaches the edge of the screen
+	if love.keyboard.isDown( "lshift" ) then
+		moveSpeed = walkSpeed
+	else
+		moveSpeed = runSpeed
+	end
     if love.keyboard.isDown( "up" ) then
-        map_y = map_y - scrollSpeed
     end
     if love.keyboard.isDown( "down" ) then
-        map_y = map_y + scrollSpeed
     end
     if love.keyboard.isDown( "left" ) then
-        map_x = map_x - scrollSpeed
+		local vx, vy = objects.player.body:getLinearVelocity()
+		objects.player.body:setLinearVelocity(-moveSpeed, vy)
     end
     if love.keyboard.isDown( "right" ) then
-        map_x = map_x + scrollSpeed
+		local vx, vy = objects.player.body:getLinearVelocity()
+		objects.player.body:setLinearVelocity(moveSpeed, vy)
     end
     if love.keyboard.isDown( "escape" ) then
         love.event.push( "q" )
     end
+	
+	player_x = objects.player.body:getX()
+	player_y = objects.player.body:getY()
+	local vx, vy = objects.player.body:getLinearVelocity()
+	if player_x < map_x + tile_w * 2 then
+		map_x = map_x - moveSpeed * dt
+	elseif player_x > map_x + screen_w - tile_w * 2 then
+		map_x = map_x + moveSpeed * dt
+	end
+	if player_y > map_y + (screen_h - tile_h * 2) then
+		map_y = map_y + vy * dt
+	elseif player_y < map_y + tile_h * 2 then
+		map_y = map_y + vy * dt
+	end
 
     -- check boundaries. remove this section if you don't wish to be constrained to the map.
     if map_x < 0 then
@@ -140,11 +171,20 @@ function love.update( dt )
 	
 end
 
+function love.keypressed(key, unicode)
+	if key == "up" then
+		objects.player.body:applyImpulse(0, 2000)
+	end
+end
+
 function love.draw()    
 	draw_map()
 	
-	love.graphics.translate(-map_x, -map_y)
-		love.graphics.setColor(72, 160, 14) -- set the drawing color to green for the ground
+	love.graphics.translate(-map_x, -map_y) -- translate the viewport so all the world-aligned draws line up with the map
+	
+	love.graphics.setColor(72, 160, 14) -- set the drawing color to green for the ground
 	love.graphics.polygon("fill", {objects.ground.shape:getPoints()})  -- draw a "filled in" polygon using the ground's coordinates
-  end
-  
+	
+	x1, y1, x2, y2 = objects.player.shape:getBoundingBox()
+	love.graphics.drawq(objects.player.texture, objects.player.quad.idle, x2, y2)
+end
