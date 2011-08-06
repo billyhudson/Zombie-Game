@@ -7,7 +7,7 @@ function love.load()
 	tile[0] = love.graphics.newQuad(64, 0, tref, tref, ref, ref)
     tile[1] = love.graphics.newQuad(128, 0, tref, tref, ref, ref)
     tile[2] = love.graphics.newQuad(128, 64, tref, tref, ref, ref)
-	tile[3] = love.graphics.newQuad(0, 0, tref, tref, ref, ref)
+	tile[3] = love.graphics.newQuad(0, 64, tref, tref, ref, ref)
    
     -- the map (random junk + copy and paste)
     map={
