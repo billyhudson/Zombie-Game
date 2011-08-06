@@ -1,62 +1,23 @@
 function love.load()
+	-- global player speeds
 	runSpeed = 250
 	walkSpeed = 75
+	-- tiles away from edge to scroll map
 	edgeBuffer = 2 -- tiles
-	maxHealth = 200
+
+	-- load external level code
+	levelchunk = love.filesystem.load("levels/sewerdemo.lua")
+	level = levelchunk()
+	-- load the map for inital processing
+	level.loadmap()
 	
-	map_x = 0
-	map_y = 0
-	
-    -- our tiles
-	tileimg = love.graphics.newImage("images/terrain.png")
-	tile = {}
-	ref = 1024 -- the size of the tile image
-	tref = 1024 / 16
-	tile[0] = love.graphics.newQuad(64, 0, tref, tref, ref, ref)
-    tile[1] = love.graphics.newQuad(128, 0, tref, tref, ref, ref)
-    tile[2] = love.graphics.newQuad(128, 64, tref, tref, ref, ref)
-	tile[3] = love.graphics.newQuad(0, 64, tref, tref, ref, ref)
-   
-    -- the map (random junk + copy and paste)
-    map={
-    { 3, 3, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0},
-    { 3, 1, 0, 0, 2, 2, 2, 0, 3, 0, 3, 0, 1, 1, 1, 0, 0, 3, 0, 0, 0},
-    { 3, 1, 0, 0, 2, 0, 2, 0, 3, 0, 3, 0, 1, 0, 0, 0, 0, 0, 3, 0, 0},
-    { 3, 1, 1, 0, 2, 2, 2, 0, 0, 3, 0, 0, 1, 1, 0, 0, 0, 0, 0, 3, 0},
-    { 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 3},
-    { 0, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 2},
-    { 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    { 0, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    { 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    { 0, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    { 0, 2, 2, 2, 0, 3, 3, 3, 0, 1, 1, 1, 0, 2, 0, 0, 0, 0, 0, 0, 0},
-    { 0, 2, 0, 0, 0, 3, 0, 3, 0, 1, 0, 1, 0, 2, 0, 0, 0, 0, 0, 0, 1},
-    { 0, 2, 0, 0, 0, 3, 0, 3, 0, 1, 0, 1, 0, 2, 0, 0, 0, 0, 0, 0, 0},
-    { 0, 2, 2, 2, 0, 3, 3, 3, 0, 1, 1, 1, 0, 2, 2, 2, 0, 0, 0, 0, 0},
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    { 0, 1, 0, 0, 2, 2, 2, 0, 3, 0, 3, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0},
-    { 0, 1, 0, 0, 2, 0, 2, 0, 3, 0, 3, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0},
-    { 0, 1, 1, 0, 2, 2, 2, 0, 0, 3, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0},
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 3},
-    { 0, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0},
-    { 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    { 0, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    { 0, 1, 0, 0, 0, 1, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
-    }
-       
     -- map variables
     map_w = #map[1] -- Obtains the width of the first row of the map
     map_h = #map -- Obtains the height of the map
     map_x = 0
     map_y = 0
     map_display_buffer = 2 -- We have to buffer one tile before and behind our viewpoint.
-                               -- Otherwise, the tiles will just pop into view, and we don't want that.
+                           -- Otherwise, the tiles will just pop into view, and we don't want that.
 	screen_w = love.graphics.getWidth()
 	screen_h = love.graphics.getHeight()
 	tile_w = 64
@@ -64,28 +25,24 @@ function love.load()
     map_display_w = screen_w / tile_w
     map_display_h =  screen_h / tile_h
 	
-	--physics world
+	-- load tiles from power-of-2 image
+	tileimg = love.graphics.newImage("images/terrain.png")
+	tile = {}
+	imagesize = 1024 -- power of 2
+	for x = 0, imagesize, tile_w do
+		for y = 0, imagesize, tile_h do
+			table.insert(tile, love.graphics.newQuad(x, y, tile_w, tile_h, imagesize, imagesize))
+		end
+	end
+	
+	--create the physics world
 	world_w = map_w * tile_w
 	world_h = map_h * tile_h
 	world = love.physics.newWorld(0, 0, world_w, world_h)
-	world:setGravity(0, 300)
 	world:setMeter(64) --the height of a meter in this world will be 64px
 	
-	-- world objects
-	objects = {}
-	-- the ground for the level
-	objects.ground = {}
-	objects.ground.body = love.physics.newBody(world, world_w/2, world_h, 0, 0)
-	objects.ground.shape = love.physics.newRectangleShape(objects.ground.body, 0, 0, world_w, 20, 0)
-	
-	objects.player = {}
-	objects.player.body = love.physics.newBody(world, 100, 100, 15, 0)
-	objects.player.shape = love.physics.newRectangleShape(objects.player.body, 0, 0, 30, 60, 0)
-	objects.player.texture = love.graphics.newImage("images/player.png")
-	objects.player.quad = {}
-	objects.player.quad.idle = love.graphics.newQuad(0, 0, 32, 64, 32, 64)
-	objects.player.health = maxHealth
-	
+	-- load the level objects
+	level.load()	
 	
 	 --initial graphics setup
 	love.graphics.setBackgroundColor(104, 136, 248) --set the background color to a nice blue
@@ -118,7 +75,7 @@ end
 function love.update( dt )
 	world:update(dt) --this puts the world into motion
 	
-    -- get input, eventually the map will be pushed by the player as he approaches the edge of the screen
+	--get input
 	if love.keyboard.isDown( "lshift" ) then
 		moveSpeed = walkSpeed
 	else
@@ -140,6 +97,7 @@ function love.update( dt )
         love.event.push( "q" )
     end
 	
+	-- push the map around based on the player's onscreen position
 	player_x = objects.player.body:getX()
 	player_y = objects.player.body:getY()
 	local vx, vy = objects.player.body:getLinearVelocity()
@@ -174,19 +132,21 @@ function love.update( dt )
 end
 
 function love.keypressed(key, unicode)
-	if key == "up" then
-		objects.player.body:applyImpulse(0, -100)
-	end
+	level.keypressed(key, unicode)
 end
 
-function love.draw()    
+function love.draw()   
+	-- draw the tile bg
 	draw_map()
 	
-	love.graphics.translate(-map_x, -map_y) -- translate the viewport so all the world-aligned draws line up with the map
+	-- save then translate the viewport so all the world-aligned draws line up with the map
+	love.graphics.push()
+	love.graphics.translate(-map_x, -map_y)
+	-- event for level to draw items in worldspace
+	level.world_draw()
 	
-	love.graphics.setColor(72, 160, 14) -- set the drawing color to green for the ground
-	love.graphics.polygon("fill", {objects.ground.shape:getPoints()})  -- draw a "filled in" polygon using the ground's coordinates
-	
-	x1, y1, x2, y2 = objects.player.shape:getBoundingBox()
-	love.graphics.drawq(objects.player.texture, objects.player.quad.idle, x2, y2)
+	-- return to normal for drawing static screen elements
+	love.graphics.pop()
+	-- call level event
+	level.screen_draw()
 end
