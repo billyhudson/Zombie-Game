@@ -22,7 +22,7 @@ end
 function love.keypressed(key, unicode)
 	if key == "return" then
 		mapstate = love.filesystem.load("mapdraw.lua")
-		mapstate()
-		love.load()
+		mapstate() -- this will overwrite all the functions in this file
+		love.load() -- call manually to relaod game state, will take effect next engine tick
 	end
 end
