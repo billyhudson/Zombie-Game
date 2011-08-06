@@ -2,6 +2,7 @@ function love.load()
 	runSpeed = 250
 	walkSpeed = 75
 	edgeBuffer = 2 -- tiles
+	maxHealth = 200
 	
 	map_x = 0
 	map_y = 0
@@ -83,6 +84,7 @@ function love.load()
 	objects.player.texture = love.graphics.newImage("images/player.png")
 	objects.player.quad = {}
 	objects.player.quad.idle = love.graphics.newQuad(0, 0, 32, 64, 32, 64)
+	objects.player.health = maxHealth
 	
 	
 	 --initial graphics setup
@@ -142,14 +144,14 @@ function love.update( dt )
 	player_y = objects.player.body:getY()
 	local vx, vy = objects.player.body:getLinearVelocity()
 	if player_x < map_x + tile_w * 2 then
-		map_x = map_x - moveSpeed * dt
+		map_x = map_x - math.abs(vx) * dt
 	elseif player_x > map_x + screen_w - tile_w * 2 then
-		map_x = map_x + moveSpeed * dt
+		map_x = map_x + math.abs(vx) * dt
 	end
 	if player_y > map_y + (screen_h - tile_h * 2) then
-		map_y = map_y + vy * dt
+		map_y = map_y + math.abs(vy) * dt
 	elseif player_y < map_y + tile_h * 2 then
-		map_y = map_y + vy * dt
+		map_y = map_y - math.abs(vy) * dt
 	end
 
     -- check boundaries. remove this section if you don't wish to be constrained to the map.
