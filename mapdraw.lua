@@ -3,7 +3,7 @@ function love.load()
 	runSpeed = 250
 	walkSpeed = 75
 	-- tiles away from edge to scroll map
-	edgeBuffer = 2 -- tiles
+	edgeBuffer = 4 -- tiles
 
 	-- load external level code
 	levelchunk = love.filesystem.load("levels/sewerdemo.lua")
@@ -170,3 +170,28 @@ function tile_round(num, length)
     end
 end
 
+function maxxy(points)
+	x = {}
+	y = {}
+	for k, v in ipairs(points) do
+		if k % 2 == 0 then -- y
+			table.insert(y, v)
+		else -- x
+			table.insert(x, v)
+		end
+	end
+	return math.max(unpack(x)), math.max(unpack(y))
+end
+
+function minxy(points)
+	local x = {}
+	local y = {}
+	for k, v in ipairs(points) do
+		if k % 2 == 0 then -- y
+			table.insert(y, v)
+		else -- x
+			table.insert(x, v)
+		end
+	end
+	return math.min(unpack(x)), math.min(unpack(y))
+end

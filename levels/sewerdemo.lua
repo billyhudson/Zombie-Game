@@ -72,7 +72,8 @@ function level.load() -- map is processed now we can add the final level code
 	-- some info text
 	objects.text = {}
 	table.insert(objects.text, {x = 32, y = 640, text = "Right click to define polygons"})
-	table.insert(objects.text, {x = 32, y = 672, text = "Z cancels the current polygon"})
+	table.insert(objects.text, {x = 32, y = 672, text = "Left click turns the polygon into a world object"})
+	table.insert(objects.text, {x = 32, y = 704, text = "Z cancels the current polygon"})
 	
 	-- poly information for the design tool
 	objects.designPoly = {}
@@ -138,6 +139,8 @@ end
 function level.screen_draw()
 	love.graphics.print("An Awesome Zombie Game Demo", 25, 25)
 	love.graphics.print("sx: "..mouse.snap_x.." sy: "..mouse.snap_y, 25, 40)
+	love.graphics.print("box: "..#objects.box, 25, 55)
+	
 end
 
 function level.mousereleased(x, y, button)
@@ -146,7 +149,15 @@ function level.mousereleased(x, y, button)
 		table.insert(objects.designPoly, mouse.snap_y)
 	end
 	if button == "l" then
-		
+		local maxx, maxy = maxxy(objects.designPoly)
+		local minx, miny = minxy(objects.designPoly)
+		local dx = maxx - minx
+		local dy = maxy - miny
+		table.insert(objects.box, {}) -- add a new row
+		local i = #objects.box -- get the new index
+		objects.box[i].body = love.physics.newBody(world, 0, 0, 0, 0)
+		objects.box[i].shape = love.physics.newPolygonShape(objects.box[i].body, unpack(objects.designPoly))
+		objects.designPoly = {} -- reset the designPoly
 	end
 end
 
