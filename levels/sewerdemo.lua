@@ -84,7 +84,7 @@ function level.world_draw()
 end
 
 function level.screen_draw()
-	love.graphics.print("HUD Text", 25, 25)
+	love.graphics.print("An Awesome Zombie Game Demo", 25, 25)
 end
 
 return level
