@@ -1,7 +1,8 @@
 function love.load()
 	screen_w = love.graphics.getWidth()
 	screen_h = love.graphics.getHeight()
-	love.graphics.setFont(24)	
+	love.graphics.setFont(24)
+	love.filesystem.setIdentity("Zombie-Game")
 end
 
 function love.draw()
