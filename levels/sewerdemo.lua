@@ -47,17 +47,17 @@ function level.load() -- map is processed now we can add the final level code
 	objects.box = {}
 	-- four outer walls
 	objects.box[1] = {}
-	objects.box[1].body = love.physics.newBody(world, world_w/2, 0, 0, 0)
-	objects.box[1].shape = love.physics.newRectangleShape(objects.box[1].body, 0, 0, world_w, 20, 0)
+	objects.box[1].body = love.physics.newBody(world, world_w/2, -5, 0, 0)
+	objects.box[1].shape = love.physics.newRectangleShape(objects.box[1].body, 0, 0, world_w, 10, 0)
 	objects.box[2] = {}
-	objects.box[2].body = love.physics.newBody(world, world_w/2, world_h, 0, 0)
-	objects.box[2].shape = love.physics.newRectangleShape(objects.box[2].body, 0, 0, world_w, 20, 0)
+	objects.box[2].body = love.physics.newBody(world, world_w/2, world_h+5, 0, 0)
+	objects.box[2].shape = love.physics.newRectangleShape(objects.box[2].body, 0, 0, world_w, 10, 0)
 	objects.box[3] = {}
-	objects.box[3].body = love.physics.newBody(world, world_w, world_h/2, 0, 0)
-	objects.box[3].shape = love.physics.newRectangleShape(objects.box[3].body, 0, 0, 20, world_h, 0)
+	objects.box[3].body = love.physics.newBody(world, world_w+5, world_h/2, 0, 0)
+	objects.box[3].shape = love.physics.newRectangleShape(objects.box[3].body, 0, 0, 10, world_h, 0)
 	objects.box[4] = {}
-	objects.box[4].body = love.physics.newBody(world, 0, world_h/2, 0, 0)
-	objects.box[4].shape = love.physics.newRectangleShape(objects.box[4].body, 0, 0, 20, world_h, 0)
+	objects.box[4].body = love.physics.newBody(world, -5, world_h/2, 0, 0)
+	objects.box[4].shape = love.physics.newRectangleShape(objects.box[4].body, 0, 0, 10, world_h, 0)
 	
 	-- the player
 	maxHealth = 200
@@ -68,6 +68,14 @@ function level.load() -- map is processed now we can add the final level code
 	objects.player.quad = {}
 	objects.player.quad.idle = love.graphics.newQuad(0, 0, 32, 64, 32, 64)
 	objects.player.health = maxHealth
+	
+	-- some info text
+	objects.text = {}
+	table.insert(objects.text, {x = 32, y = 640, text = "Right click to define polygons"})
+	table.insert(objects.text, {x = 32, y = 672, text = "Z cancels the current polygon"})
+	
+	-- poly information for the design tool
+	objects.designPoly = {}
 	
 	-- mouse pointer (for level building)
 	mouse = {}
@@ -98,6 +106,9 @@ function level.keypressed(key, unicide)
 	if key == "down" then
 		objects.player.body:applyImpulse(0, 100)
 	end
+	if key == "z" then
+		objects.designPoly = {}
+	end
 end
 
 function level.world_draw()
@@ -112,13 +123,31 @@ function level.world_draw()
 	x1, y1, x2, y2 = objects.player.shape:getBoundingBox()
 	love.graphics.drawq(objects.player.texture, objects.player.quad.idle, x2, y2)
 	
+	-- draw the help text
+	for k, v in ipairs(objects.text) do
+		love.graphics.print(v.text, v.x, v.y)
+	end
+	
 	-- draw the mouse pointer
 	love.graphics.point(mouse.snap_x, mouse.snap_y)
+	
+	-- draw the "design poly"
+	love.graphics.polygon("line", objects.designPoly)
 end
 
 function level.screen_draw()
 	love.graphics.print("An Awesome Zombie Game Demo", 25, 25)
 	love.graphics.print("sx: "..mouse.snap_x.." sy: "..mouse.snap_y, 25, 40)
+end
+
+function level.mousereleased(x, y, button)
+	if button == "r" then
+		table.insert(objects.designPoly, mouse.snap_x)
+		table.insert(objects.designPoly, mouse.snap_y)
+	end
+	if button == "l" then
+		
+	end
 end
 
 return level

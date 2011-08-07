@@ -39,7 +39,7 @@ function love.load()
 	--create the physics world
 	world_w = map_w * tile_w
 	world_h = map_h * tile_h
-	world = love.physics.newWorld(0, 0, world_w, world_h)
+	world = love.physics.newWorld(-5, -5, world_w+5, world_h+5) -- add 5px to accomodate walls
 	world:setMeter(64) --the height of a meter in this world will be 32px
 	
 	--initial graphics setup
@@ -135,6 +135,10 @@ end
 
 function love.keypressed(key, unicode)
 	level.keypressed(key, unicode)
+end
+
+function love.mousereleased(x, y, button)
+	level.mousereleased(x, y, button)
 end
 
 function love.draw()   
