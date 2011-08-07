@@ -74,6 +74,7 @@ function level.load() -- map is processed now we can add the final level code
 	table.insert(objects.text, {x = 32, y = 640, text = "Right click to define polygons"})
 	table.insert(objects.text, {x = 32, y = 672, text = "Left click turns the polygon into a world object"})
 	table.insert(objects.text, {x = 32, y = 704, text = "Z cancels the current polygon"})
+	table.insert(objects.text, {x = 32, y = 736, text = "X removes the last world object"})
 	
 	-- poly information for the design tool
 	objects.designPoly = {}
@@ -109,6 +110,9 @@ function level.keypressed(key, unicide)
 	end
 	if key == "z" then
 		objects.designPoly = {}
+	end
+	if key == "x" then
+		table.remove(objects.box)
 	end
 end
 
