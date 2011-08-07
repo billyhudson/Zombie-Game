@@ -101,9 +101,6 @@ end
 
 function level.screen_draw()
 	love.graphics.print("An Awesome Zombie Game Demo", 25, 25)
-	-- for building phys boxes
-	local x, y = love.mouse.getPosition()
-	love.graphics.print("x:" .. map_x + x .. " y:" .. map_y + y, 25, 45)
 end
 
 return level
