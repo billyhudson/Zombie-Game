@@ -148,7 +148,7 @@ function level.mousereleased(x, y, button)
 		table.insert(objects.designPoly, mouse.snap_x)
 		table.insert(objects.designPoly, mouse.snap_y)
 	end
-	if button == "l" then
+	if button == "l" and #objects.designPoly  >= 6 then
 		local maxx, maxy = maxxy(objects.designPoly)
 		local minx, miny = minxy(objects.designPoly)
 		local dx = maxx - minx
