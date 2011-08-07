@@ -69,12 +69,26 @@ function level.load() -- map is processed now we can add the final level code
 	objects.player.quad.idle = love.graphics.newQuad(0, 0, 32, 64, 32, 64)
 	objects.player.health = maxHealth
 	
+	-- mouse pointer (for level building)
+	mouse = {}
+	mouse.x = 0
+	mouse.y = 0
+	mouse.snap_x = 0
+	mouse.snap_y = 0
+	
 	-- we also set the world's gravity here
 	world:setGravity(0, 1000)
+	
+	-- level graphics setup
+	love.graphics.setPointSize(3)
+	love.graphics.setPointStyle("smooth")
 end
 
 function level.update(dt)
-
+	-- update mouse info
+	mouse.x, mouse.y = love.mouse.getPosition()
+	mouse.snap_x = tile_round(mouse.x + map_x, tile_w)
+	mouse.snap_y = tile_round(mouse.y + map_y, tile_h)
 end
 
 function level.keypressed(key, unicide)
@@ -87,9 +101,9 @@ function level.keypressed(key, unicide)
 end
 
 function level.world_draw()
-	-- set the drawing color to green for the ground
+	-- set the drawing color
 	love.graphics.setColor(0, 255, 255)
-	-- some of these are for level design and should be commented out in production
+	
 	for k, v in pairs(objects.box) do
 		-- draw an outlined polygon using the box's coordinates
 		love.graphics.polygon("line", {objects.box[k].shape:getPoints()})
@@ -97,10 +111,14 @@ function level.world_draw()
 	-- draw a texture for the player
 	x1, y1, x2, y2 = objects.player.shape:getBoundingBox()
 	love.graphics.drawq(objects.player.texture, objects.player.quad.idle, x2, y2)
+	
+	-- draw the mouse pointer
+	love.graphics.point(mouse.snap_x, mouse.snap_y)
 end
 
 function level.screen_draw()
 	love.graphics.print("An Awesome Zombie Game Demo", 25, 25)
+	love.graphics.print("sx: "..mouse.snap_x.." sy: "..mouse.snap_y, 25, 40)
 end
 
 return level

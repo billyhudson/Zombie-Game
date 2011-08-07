@@ -42,14 +42,14 @@ function love.load()
 	world = love.physics.newWorld(0, 0, world_w, world_h)
 	world:setMeter(64) --the height of a meter in this world will be 32px
 	
-	-- load the level objects
-	level.load()	
-	
-	 --initial graphics setup
+	--initial graphics setup
 	love.graphics.setBackgroundColor(0, 0, 0)
 	love.graphics.setMode(800, 600, false, true, 0) --set the window dimensions to 800 by 600 with no fullscreen, vsync on, and no antialiasing
 	love.graphics.setColorMode("replace")
 	love.graphics.setFont(18)
+	
+	-- load the level objects
+	level.load()	
 end
    
 function draw_map()
@@ -130,6 +130,7 @@ function love.update( dt )
         map_y = map_h * tile_h - map_display_h * tile_h
     end
 	
+	level.update()
 end
 
 function love.keypressed(key, unicode)
@@ -151,3 +152,17 @@ function love.draw()
 	-- call level event
 	level.screen_draw()
 end
+
+-- rounds to the nearest tile boundary
+function tile_round(num, length)
+    under = num - (num % length)
+    upper = under +length
+    underV = -(under - num)
+    upperV = upper - num
+    if (upperV > underV) then
+        return under
+    else
+        return upper
+    end
+end
+
