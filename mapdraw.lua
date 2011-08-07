@@ -53,8 +53,8 @@ function love.load()
 end
    
 function draw_map()
-    offset_x = map_x % tile_w
-    offset_y = map_y % tile_h
+    offset_x = math.floor(map_x % tile_w)
+    offset_y = math.floor(map_y % tile_h)
     firstTile_x = math.floor(map_x / tile_w)
     firstTile_y = math.floor(map_y / tile_h)
    
