@@ -71,8 +71,8 @@ function level.load() -- map is processed now we can add the final level code
 	
 	-- some info text
 	objects.text = {}
-	table.insert(objects.text, {x = 32, y = 640, text = "Right click to define polygons"})
-	table.insert(objects.text, {x = 32, y = 672, text = "Left click turns the polygon into a world object"})
+	table.insert(objects.text, {x = 32, y = 640, text = "Left click to define polygons"})
+	table.insert(objects.text, {x = 32, y = 672, text = "Right click turns the polygon into a world object"})
 	table.insert(objects.text, {x = 32, y = 704, text = "Z cancels the current polygon"})
 	table.insert(objects.text, {x = 32, y = 736, text = "X removes the last world object"})
 	
@@ -90,7 +90,7 @@ function level.load() -- map is processed now we can add the final level code
 	world:setGravity(0, 1000)
 	
 	-- level graphics setup
-	love.graphics.setPointSize(3)
+	love.graphics.setPointSize(4)
 	love.graphics.setPointStyle("smooth")
 end
 
@@ -111,7 +111,10 @@ function level.keypressed(key, unicide)
 	if key == "z" then
 		objects.designPoly = {}
 	end
-	if key == "x" then
+	if key == "x" and #objects.box > 0 then
+		local i = #objects.box
+		objects.box[i].shape:destroy()
+		objects.box[i].body:destroy()
 		table.remove(objects.box)
 	end
 end
@@ -138,6 +141,9 @@ function level.world_draw()
 	
 	-- draw the "design poly"
 	love.graphics.polygon("line", objects.designPoly)
+	for i = 1, #objects.designPoly, 2 do
+		love.graphics.point(objects.designPoly[i], objects.designPoly[i+1])
+	end
 end
 
 function level.screen_draw()
@@ -148,11 +154,12 @@ function level.screen_draw()
 end
 
 function level.mousereleased(x, y, button)
-	if button == "r" then
+	if button == "l" and #objects.designPoly <= 7 * 2 then -- max 7 points
 		table.insert(objects.designPoly, mouse.snap_x)
 		table.insert(objects.designPoly, mouse.snap_y)
 	end
-	if button == "l" and #objects.designPoly  >= 6 then
+	if button == "r" and #objects.designPoly  >= 4 * 2 then -- min 4 points
+		-- copy design polygon into a physics object
 		local maxx, maxy = maxxy(objects.designPoly)
 		local minx, miny = minxy(objects.designPoly)
 		local dx = maxx - minx
