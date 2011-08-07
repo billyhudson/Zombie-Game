@@ -12,25 +12,26 @@ function love.load()
 	level.loadmap()
 	
     -- map variables
+	screen_w = love.graphics.getWidth()
+	screen_h = love.graphics.getHeight()
+	tile_w = 32
+    tile_h = 32
+    map_display_w = screen_w / tile_w
+    map_display_h =  screen_h / tile_h
+	
     map_w = #map[1] -- Obtains the width of the first row of the map
     map_h = #map -- Obtains the height of the map
     map_x = 0
-    map_y = 0
+    map_y = map_h * tile_h - screen_h
     map_display_buffer = 2 -- We have to buffer one tile before and behind our viewpoint.
                            -- Otherwise, the tiles will just pop into view, and we don't want that.
-	screen_w = love.graphics.getWidth()
-	screen_h = love.graphics.getHeight()
-	tile_w = 64
-    tile_h = 64
-    map_display_w = screen_w / tile_w
-    map_display_h =  screen_h / tile_h
 	
 	-- load tiles from power-of-2 image
 	tileimg = love.graphics.newImage("images/terrain.png")
 	tile = {}
 	imagesize = 1024 -- power of 2
-	for x = 0, imagesize, tile_w do
-		for y = 0, imagesize, tile_h do
+	for y = 0, imagesize, tile_w do
+		for x = 0, imagesize, tile_h do
 			table.insert(tile, love.graphics.newQuad(x, y, tile_w, tile_h, imagesize, imagesize))
 		end
 	end
@@ -39,13 +40,13 @@ function love.load()
 	world_w = map_w * tile_w
 	world_h = map_h * tile_h
 	world = love.physics.newWorld(0, 0, world_w, world_h)
-	world:setMeter(64) --the height of a meter in this world will be 64px
+	world:setMeter(64) --the height of a meter in this world will be 32px
 	
 	-- load the level objects
 	level.load()	
 	
 	 --initial graphics setup
-	love.graphics.setBackgroundColor(104, 136, 248) --set the background color to a nice blue
+	love.graphics.setBackgroundColor(0, 0, 0)
 	love.graphics.setMode(800, 600, false, true, 0) --set the window dimensions to 800 by 600 with no fullscreen, vsync on, and no antialiasing
 	love.graphics.setColorMode("replace")
 	love.graphics.setFont(18)
@@ -101,14 +102,14 @@ function love.update( dt )
 	player_x = objects.player.body:getX()
 	player_y = objects.player.body:getY()
 	local vx, vy = objects.player.body:getLinearVelocity()
-	if player_x < map_x + tile_w * 2 then
+	if player_x < map_x + tile_w * edgeBuffer then
 		map_x = map_x - math.abs(vx) * dt
-	elseif player_x > map_x + screen_w - tile_w * 2 then
+	elseif player_x > map_x + screen_w - tile_w * edgeBuffer then
 		map_x = map_x + math.abs(vx) * dt
 	end
-	if player_y > map_y + (screen_h - tile_h * 2) then
+	if player_y > map_y + (screen_h - tile_h * edgeBuffer) then
 		map_y = map_y + math.abs(vy) * dt
-	elseif player_y < map_y + tile_h * 2 then
+	elseif player_y < map_y + tile_h * edgeBuffer then
 		map_y = map_y - math.abs(vy) * dt
 	end
 
