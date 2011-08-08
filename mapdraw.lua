@@ -8,8 +8,11 @@ function love.load()
 	-- load external level code
 	levelchunk = love.filesystem.load("levels/sewerdemo.lua")
 	level = levelchunk()
+	
 	-- load the map for inital processing
-	level.loadmap()
+	mapData = level.loadmap()
+	
+	map = mapData.layers[1].data
 	
     -- map variables
 	screen_w = love.graphics.getWidth()
