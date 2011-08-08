@@ -88,11 +88,11 @@ function love.update( dt )
     end
     if love.keyboard.isDown( "left" ) then
 		local vx, vy = objects.player.body:getLinearVelocity()
-		objects.player.body:setLinearVelocity(-moveSpeed, vy)
+		objects.player.body:setLinearVelocity(-moveSpeed, vy-1)
     end
     if love.keyboard.isDown( "right" ) then
 		local vx, vy = objects.player.body:getLinearVelocity()
-		objects.player.body:setLinearVelocity(moveSpeed, vy)
+		objects.player.body:setLinearVelocity(moveSpeed, vy-1)
     end
     if love.keyboard.isDown( "escape" ) then
         love.event.push( "q" )
