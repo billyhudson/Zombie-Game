@@ -6,7 +6,7 @@ function love.load()
 	edgeBuffer = 4 -- tiles
 
 	-- load external level code
-	levelchunk = love.filesystem.load("levels/sewerdemo.lua")
+	levelchunk = love.filesystem.load("levels/level1.lua")
 	level = levelchunk()
 	
 	-- load the map for inital processing
