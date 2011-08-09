@@ -8,7 +8,5 @@ All rights to the code are reserved by the author except any that must be waived
 You are free to use the code for the purposes of:
 
 * Education
-* Contributing to development on GitHub.com
 
 The right to use the code primarily for entertainment purposes is reserved for licensed users only.
-Licensing inquires can be directed to billyhudson on http://github.com/
