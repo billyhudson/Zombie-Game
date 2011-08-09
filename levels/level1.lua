@@ -40,11 +40,11 @@ function level.load() -- map is processed now we can add the final level code
 	
 	-- some info text
 	objects.text = {}
-	table.insert(objects.text, {x = 32, y = 640, text = "Left click to define polygons"})
-	table.insert(objects.text, {x = 32, y = 672, text = "Right click turns the polygon into a world object"})
-	table.insert(objects.text, {x = 32, y = 704, text = "Z cancels the current polygon"})
-	table.insert(objects.text, {x = 32, y = 736, text = "X removes the last world object"})
-	table.insert(objects.text, {x = 32, y = 768, text = "Q save world object data"})
+	table.insert(objects.text, {x = 32, y = 352, text = "Left click to define polygons"})
+	table.insert(objects.text, {x = 32, y = 384, text = "Right click turns the polygon into a world object"})
+	table.insert(objects.text, {x = 32, y = 416, text = "Z cancels the current polygon"})
+	table.insert(objects.text, {x = 32, y = 448, text = "X removes the last world object"})
+	table.insert(objects.text, {x = 32, y = 480, text = "Q save world object data"})
 	-- poly information for the design tool
 	objects.designPoly = {}
 	
@@ -105,14 +105,15 @@ function level.world_draw()
 		-- draw an outlined polygon using the box's coordinates
 		love.graphics.polygon("line", {objects.box[k].shape:getPoints()})
 	end
-	-- draw a texture for the player
-	x1, y1, x2, y2 = objects.player.shape:getBoundingBox()
-	love.graphics.drawq(objects.player.texture, objects.player.quad.idle, x2, y2)
 	
 	-- draw the help text
 	for k, v in ipairs(objects.text) do
 		love.graphics.print(v.text, v.x, v.y)
 	end
+	
+	-- draw a texture for the player
+	x1, y1, x2, y2 = objects.player.shape:getBoundingBox()
+	love.graphics.drawq(objects.player.texture, objects.player.quad.idle, x2, y2)
 	
 	-- draw the mouse pointer
 	love.graphics.point(mouse.snap_x, mouse.snap_y)
