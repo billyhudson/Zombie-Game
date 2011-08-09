@@ -59,6 +59,76 @@ map = {
         1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
         1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
       }
+    },
+    {
+      type = "objectgroup",
+      name = "world",
+      visible = true,
+      opacity = 1,
+      properties = {
+      },
+      objects = {
+        {
+          name = "",
+          type = "",
+          x = 0,
+          y = 288,
+          width = 448,
+          height = 32,
+          properties = {
+          }
+        },
+        {
+          name = "",
+          type = "",
+          x = 480,
+          y = 288,
+          width = 480,
+          height = 32,
+          properties = {
+          }
+        },
+        {
+          name = "",
+          type = "",
+          x = 0,
+          y = 576,
+          width = 960,
+          height = 32,
+          properties = {
+          }
+        },
+        {
+          name = "",
+          type = "",
+          x = 0,
+          y = 320,
+          width = 416,
+          height = 96,
+          properties = {
+          }
+        },
+        {
+          name = "",
+          type = "",
+          x = 512,
+          y = 320,
+          width = 448,
+          height = 96,
+          properties = {
+          }
+        },
+        {
+          name = "",
+          type = "",
+          x = 640,
+          y = 128,
+          width = 128,
+          height = 32,
+          properties = {
+          }
+        }
+      }
     }
   }
 }

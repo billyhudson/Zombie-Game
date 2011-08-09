@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="30" height="20" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="Tileset" tilewidth="32" tileheight="32">
+  <image source="../images/terrain.png" trans="ffffff" width="1024" height="1024"/>
+ </tileset>
+ <layer name="background" width="30" height="20">
+  <data encoding="base64" compression="zlib">
+   eJzt07sOgCAMBdAqImh00fj+//+0JAwsqLkYxIThLNDbpkMVEamMNGsC/u/qnmRT3t+tOyxfvQZ7Z/HsgfkasLCVbWDeKAAdk6wH86g/z20Bg507gnmjBMmArE/leReeuSKgj2t6ad+rPvNHYt5BCk7SFQ46
+  </data>
+ </layer>
+ <objectgroup name="world" width="30" height="20">
+  <object x="0" y="288" width="448" height="32"/>
+  <object x="480" y="288" width="480" height="32"/>
+  <object x="0" y="576" width="960" height="32"/>
+  <object x="0" y="320" width="416" height="96"/>
+  <object x="512" y="320" width="448" height="96"/>
+  <object x="640" y="128" width="128" height="32"/>
+ </objectgroup>
+</map>

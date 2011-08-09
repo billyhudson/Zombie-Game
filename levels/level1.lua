@@ -31,7 +31,7 @@ function level.load() -- map is processed now we can add the final level code
 	-- the player
 	maxHealth = 200
 	objects.player = {}
-	objects.player.body = love.physics.newBody(world, 100, world_h - 20, 15, 0)
+	objects.player.body = love.physics.newBody(world, 100, 100, 15, 0)
 	objects.player.shape = love.physics.newRectangleShape(objects.player.body, 0, 0, 30, 60, 0)
 	objects.player.texture = love.graphics.newImage("images/player.png")
 	objects.player.quad = {}
@@ -138,10 +138,6 @@ function level.mousereleased(x, y, button)
 	end
 	if button == "r" and #objects.designPoly  >= 4 * 2 then -- min 4 points
 		-- copy design polygon into a physics object
-		local maxx, maxy = maxxy(objects.designPoly)
-		local minx, miny = minxy(objects.designPoly)
-		local dx = maxx - minx
-		local dy = maxy - miny
 		table.insert(objects.box, {}) -- add a new row
 		local i = #objects.box -- get the new index
 		objects.box[i].body = love.physics.newBody(world, 0, 0, 0, 0)
