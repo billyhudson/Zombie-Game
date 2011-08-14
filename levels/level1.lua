@@ -137,7 +137,7 @@ function level.mousereleased(x, y, button)
 		table.insert(objects.designPoly, mouse.snap_x)
 		table.insert(objects.designPoly, mouse.snap_y)
 	end
-	if button == "r" and #objects.designPoly  >= 4 * 2 then -- min 4 points
+	if button == "r" and #objects.designPoly  >= 3 * 2 then -- min 4 points
 		-- copy design polygon into a physics object
 		table.insert(objects.box, {}) -- add a new row
 		local i = #objects.box -- get the new index
