@@ -12,7 +12,6 @@ function tiledLoader.loadFile(filename)
 	return tiledLoader.data
 end
 
--- given height 
 function tiledLoader.make2dMap(map1d, w, h)
 	local map2d = {}
 	local i = 0
