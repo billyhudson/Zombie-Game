@@ -157,16 +157,14 @@ local function getWorldObjects(node)
 	local objects = {}
 	for k, sub in ipairs(node) do
 		if sub.label == "objectgroup" and sub.xarg.name == "world" then
-			local object = {}
-			table.insert(objects, object)
 			for l, v in ipairs(sub) do
+				local object = {}
+				table.insert(objects, object)
 				object.x = v.xarg.x
 				object.y = v.xarg.y
 				object.width = v.xarg.width
 				object.height = v.xarg.height
-				m = l
 			end
-			error(m)
 		end
 	end
 	return objects
@@ -186,6 +184,6 @@ function TiledMap_Parse(filename)
 	local map = getMapData(xml[2])
     local tiles = getTilesets(xml[2])
     local layers = getLayers(xml[2])
-	local world = getWorldObjects(xml[2])
-    return tiles, layers, map, world
+	local objects = getWorldObjects(xml[2])
+    return tiles, layers, map, objects
 end
