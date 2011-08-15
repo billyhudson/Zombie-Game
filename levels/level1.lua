@@ -2,11 +2,11 @@ local level = {}
 
 function level.loadmap() -- load the map for inital processing
 	
-	local chunk = love.filesystem.load("/tiledLoader.lua")
+	-- load the level's tmx map file
+	local chunk = love.filesystem.load("/tmxLoader.lua")
 	local tiled = chunk()
-	local map = tiled.loadFile("/tiled/level1.lua")
+	TiledMap_Load("/tiled/level1.tmx", gTileSize)
 	
-	return map
 end
 
 function level.load() -- map is processed now we can add the final level code
