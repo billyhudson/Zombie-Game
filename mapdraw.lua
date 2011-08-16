@@ -6,14 +6,13 @@ function love.load()
 	edgeBuffer = 8 
 
 	-- load external level code
-	levelchunk = love.filesystem.load("levels/level1.lua")
+	levelchunk = love.filesystem.load("levels/polyEditor.lua")
 	level = levelchunk()
 	
 	-- map variables
 	gTileSize = 32 -- a global tile size for refrence by modules of the program
 	screen_w = love.graphics.getWidth()
 	screen_h = love.graphics.getHeight()
-	--TODO remove these
 	tile_w = gTileSize
     tile_h = gTileSize
 	
@@ -53,12 +52,13 @@ function love.update( dt )
 	world:update(dt) --this puts the world into motion
 	
 	--get input
-	if love.keyboard.isDown( "lshift" ) then
+	if love.keyboard.isDown( "lshift" ) or love.keyboard.isDown( "rshift" ) then
 		moveSpeed = walkSpeed
 	else
 		moveSpeed = runSpeed
 	end
     if love.keyboard.isDown( "up" ) then
+		objects.player.body:applyForce(0, -500)
     end
     if love.keyboard.isDown( "down" ) then
     end
@@ -85,6 +85,18 @@ function love.update( dt )
 		map_y = map_y + math.abs(vy) * dt
 	elseif player_y < map_y + tile_h * edgeBuffer then
 		map_y = map_y - math.abs(vy) * dt
+	end
+	
+	-- keep screen from leaving the map
+	if map_x < 0 then
+		map_x = 0
+	elseif map_x > gMap.width * gTileSize - screen_w then
+		map_x = gMap.width * gTileSize - screen_w
+	end
+	if map_y < 0 then
+		map_y = 0
+	elseif map_y > gMap.height * gTileSize - screen_h then
+		map_y = gMap.height * gTileSize - screen_h
 	end
 	
 	level.update()

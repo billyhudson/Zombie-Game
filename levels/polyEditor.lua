@@ -5,7 +5,7 @@ function level.loadmap() -- load the map for inital processing
 	-- load the level's tmx map file
 	local chunk = love.filesystem.load("/tmxLoader.lua")
 	local tiled = chunk()
-	TiledMap_Load("/tiled/test1.tmx", gTileSize)
+	TiledMap_Load("/tiled/level1.tmx", gTileSize)
 	
 end
 
@@ -14,19 +14,23 @@ function level.load() -- map is processed now we can add the final level code
 	objects = {}
 	-- the ground for the level
 	objects.box = {}
-	-- four outer walls
+	-- three outer walls (no bottom)
+	---[[
 	objects.box[1] = {}
 	objects.box[1].body = love.physics.newBody(world, world_w/2, -5, 0, 0)
 	objects.box[1].shape = love.physics.newRectangleShape(objects.box[1].body, 0, 0, world_w, 10, 0)
+	--[[
 	objects.box[2] = {}
 	objects.box[2].body = love.physics.newBody(world, world_w/2, world_h+5, 0, 0)
 	objects.box[2].shape = love.physics.newRectangleShape(objects.box[2].body, 0, 0, world_w, 10, 0)
+	--]]
 	objects.box[3] = {}
 	objects.box[3].body = love.physics.newBody(world, world_w+5, world_h/2, 0, 0)
 	objects.box[3].shape = love.physics.newRectangleShape(objects.box[3].body, 0, 0, 10, world_h, 0)
 	objects.box[4] = {}
 	objects.box[4].body = love.physics.newBody(world, -5, world_h/2, 0, 0)
 	objects.box[4].shape = love.physics.newRectangleShape(objects.box[4].body, 0, 0, 10, world_h, 0)
+	--]]
 	
 	-- the player
 	maxHealth = 200
