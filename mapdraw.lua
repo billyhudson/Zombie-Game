@@ -3,7 +3,7 @@ function love.load()
 	runSpeed = 250
 	walkSpeed = 75
 	-- tiles away from edge to scroll map
-	edgeBuffer = 4 -- tiles
+	edgeBuffer = 8 
 
 	-- load external level code
 	levelchunk = love.filesystem.load("levels/level1.lua")
@@ -20,9 +20,6 @@ function love.load()
 	-- load the map for inital processing
 	level.loadmap()
 	
-    map_x = 0
-    map_y = (gMap.height * gTileSize) - screen_h
-	
 	--create the physics world
 	world_w = gMap.width * gTileSize
 	world_h = gMap.height * gTileSize
@@ -37,6 +34,10 @@ function love.load()
 	
 	-- load the level objects
 	level.load()
+	
+	-- center the screen on the player
+	map_x = objects.player.body:getX() - screen_w/2
+    map_y = objects.player.body:getY() - screen_h/2
 	
 	-- load the world objects into the physics engine
 	for k, v in ipairs(gWorld) do
@@ -62,12 +63,10 @@ function love.update( dt )
     if love.keyboard.isDown( "down" ) then
     end
     if love.keyboard.isDown( "left" ) then
-		local vx, vy = objects.player.body:getLinearVelocity()
-		objects.player.body:setLinearVelocity(-moveSpeed, vy-1)
-    end
+		objects.player.body:applyForce(-400, 0)
+	end
     if love.keyboard.isDown( "right" ) then
-		local vx, vy = objects.player.body:getLinearVelocity()
-		objects.player.body:setLinearVelocity(moveSpeed, vy-1)
+		objects.player.body:applyForce(400, 0)
     end
     if love.keyboard.isDown( "escape" ) then
         love.event.push( "q" )
