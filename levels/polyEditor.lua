@@ -127,6 +127,9 @@ function level.world_draw()
 	for i = 1, #objects.designPoly, 2 do
 		love.graphics.point(objects.designPoly[i], objects.designPoly[i+1])
 	end
+	
+	-- draw the spawner particle effects
+	
 end
 
 function level.screen_draw()

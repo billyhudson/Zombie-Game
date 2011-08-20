@@ -15,10 +15,11 @@ function TiledMap_Load (filepath,tilesize,spritepath_removeold,spritepath_prefix
     kTileSize = tilesize or 32
     gTileGfx = {}
    
-    local tiletype,layers,map,objects = TiledMap_Parse(filepath)
+    local tiletype,layers,map,objects,spawners = TiledMap_Parse(filepath)
     gMapLayers = layers
 	gMap = map
 	gWorld = objects
+	gSpawners = spawners
     for first_gid,path in pairs(tiletype) do
         path = spritepath_prefix .. string.gsub(path,"^"..string.gsub(spritepath_removeold,"%.","%%."),"")
         local raw = love.image.newImageData(path)
@@ -170,6 +171,22 @@ local function getWorldObjects(node)
 	return objects
 end
 
+-- load spawners from map data
+local function getSpawners(node)
+	local objects = {}
+	for k, sub in ipairs(node) do
+		if sub.label == "objectgroup" and sub.xarg.name == "spawners" then
+			for l, v in ipairs(sub) do
+				local object = {}
+				table.insert(objects, object)
+				object.x = v.xarg.x
+				object.y = v.xarg.y
+			end
+		end
+	end
+	return objects
+end
+
 local function getMapData(node)
 	local d = {}
 	if (node.label == "map") then
@@ -185,5 +202,6 @@ function TiledMap_Parse(filename)
     local tiles = getTilesets(xml[2])
     local layers = getLayers(xml[2])
 	local objects = getWorldObjects(xml[2])
-    return tiles, layers, map, objects
+	local spawners = getSpawners(xml[2])
+    return tiles, layers, map, objects, spawners
 end
