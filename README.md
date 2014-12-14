@@ -13,4 +13,4 @@ You are free to use the code for the purposes of:
 
 * Education
 
-The right to use the code for entertainment purposes is reserved for licensed users only.
+All other right are reserved.
