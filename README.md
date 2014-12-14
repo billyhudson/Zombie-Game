@@ -12,5 +12,3 @@ All rights to the code are reserved by the author except any that must be waived
 You are free to use the code for the purposes of:
 
 * Education
-
-All other right are reserved.
